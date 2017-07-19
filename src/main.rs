@@ -5,14 +5,14 @@ fn readConfig() -> Result<String, std::io::Error> {
 	let mut contents = String::new();
 
 	let mut file =
-		File::open("./run.t3oml")?;
+		File::open("./run.toml")?;
 
-	let content = file
+	let res = file
 		.read_to_string(&mut contents);
 
-	match content {
-		Ok(val) =>
-			Ok(val.to_string()),
+	match res {
+		Ok(_) =>
+			Ok(contents.to_string()),
 
 		Err(err) =>
 			Err(err),
