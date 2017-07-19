@@ -1,0 +1,7 @@
+[package]
+name = "run-rust"
+version = "0.1.0"
+authors = ["sebastian <s@porto5.com>"]
+
+[dependencies]
+toml = "0.4.2"
