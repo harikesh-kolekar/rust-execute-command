@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::prelude::*;
 
-fn readConfig() -> String {
+fn readConfig() -> Result<String, String> {
 	// let mut file = File::open("./run.toml")?;
 	// let mut contents = String::new();
 
@@ -11,12 +11,18 @@ fn readConfig() -> String {
     let mut contents = String::new();
     file.read_to_string(&mut contents).expect("Unable to read the file");
 
-	contents.to_string()
+	Ok(contents.to_string())
 	// "hello world".to_string()
 }
 
 fn main() {
 	let config = readConfig();
 
-	println!("{}", config);
+	match config {
+		Ok(text) =>
+			println!("{}", text),
+		Err(err) =>
+			println!("{}", err),
+	}
+
 }
