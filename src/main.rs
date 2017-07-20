@@ -6,17 +6,24 @@ use std::fs::File;
 use std::io::prelude::*;
 use toml::Value;
 use std::error::Error;
+use std::fmt;
 
 #[derive(Deserialize)]
 struct Config {
-    items: Vec<Item>,
+    item: Vec<Item>,
 }
 
 #[derive(Deserialize)]
 struct Item {
     cmd: String,
     code: String,
-    description: String,
+    desc: String,
+}
+
+impl fmt::Debug for Item {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.code)
+    }
 }
 
 fn read_config() -> Result<String, String> {
@@ -30,15 +37,16 @@ fn read_config() -> Result<String, String> {
         })
 }
 
-fn parse_config(config: String) -> Result<Value, String> {
-    config.parse::<Value>().map_err(|e: toml::de::Error| e.to_string())
+fn parse_config(config: String) -> Result<Config, String> {
+    // config.parse::<Value>().map_err(|e: toml::de::Error| e.to_string())
+    toml::from_str(&config).map_err(|e: toml::de::Error| e.to_string())
 }
 
 fn main() {
-    let config = read_config().and_then(parse_config);
+    let result = read_config().and_then(parse_config);
 
-    match config {
-        Ok(text) => println!("{}", text),
+    match result {
+        Ok(config) => println!("{:?}", config.item),
 
         Err(err) => println!("{}", err),
     }
