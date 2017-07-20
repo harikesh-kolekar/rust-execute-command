@@ -8,6 +8,7 @@ use std::fmt;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io;
+use std::process::Command;
 use term_painter::Attr::*;
 use term_painter::Color::*;
 use term_painter::ToStyle;
@@ -89,12 +90,23 @@ fn find_item(tuple: (Config, String)) -> Result<Item, String> {
         .ok_or("Option not found".to_string())
 }
 
+fn run_item(item: Item) -> Result<std::process::Output, String> {
+    Command::new(item.cmd)
+        .output()
+        .and_then(|output|
+            println!("{}", String::from_utf8_lossy(&output.stdout));
+            println!("{}", String::from_utf8_lossy(&output.stderr));
+            Ok(output)
+        )
+}
+
 fn main() {
     let result = read_config()
         .and_then(parse_config)
         .and_then(print_menu)
         .and_then(ask_for_option)
-        .and_then(find_item);
+        .and_then(find_item)
+        .and_then(run_item);
 
     match result {
         Ok(config) => println!("{}", "Bye!"),
