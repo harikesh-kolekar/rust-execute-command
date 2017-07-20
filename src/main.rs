@@ -19,6 +19,7 @@ struct Config {
 }
 
 #[derive(Deserialize)]
+#[derive(Clone)]
 struct Item {
     cmd: String,
     code: String,
@@ -60,16 +61,32 @@ fn ask_for_option(config: Config) -> Result<(Config, String), String> {
     println!("{}", Green.paint("Select an option"));
 
     io::stdout().flush();
+
     let mut opt = String::new();
     io::stdin().read_line(&mut opt);
 
+    if let Some('\n') = opt.chars().next_back() {
+        opt.pop();
+    }
+
+    if let Some('\r') = opt.chars().next_back() {
+        opt.pop();
+    }
+
     let value = (config, opt);
+
+
     Ok(value)
 }
 
-fn find_item(tuple: (Config, String)) -> Result<Config, String> {
+fn find_item(tuple: (Config, String)) -> Result<Item, String> {
     let (config, opt) = tuple;
-    Ok(config)
+
+    config.item
+        .iter()
+        .find(|&item| item.code == opt)
+        .cloned()
+        .ok_or("Option not found".to_string())
 }
 
 fn main() {
