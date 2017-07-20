@@ -38,15 +38,23 @@ fn read_config() -> Result<String, String> {
 }
 
 fn parse_config(config: String) -> Result<Config, String> {
-    // config.parse::<Value>().map_err(|e: toml::de::Error| e.to_string())
     toml::from_str(&config).map_err(|e: toml::de::Error| e.to_string())
 }
 
+fn print_menu(config: Config) -> Result<String, String> {
+    for item in config.item {
+        println!("{} {}", item.code, item.desc);
+    }
+    Ok("".to_string())
+}
+
 fn main() {
-    let result = read_config().and_then(parse_config);
+    let config_result = read_config().and_then(parse_config);
+
+    let result = config_result.and_then(|config| print_menu(config));
 
     match result {
-        Ok(config) => println!("{:?}", config.item),
+        Ok(config) => println!("{}", "Bye!"),
 
         Err(err) => println!("{}", err),
     }

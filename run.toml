@@ -1,4 +1,9 @@
 [[item]]
-code = "a"
+code = "aa"
+desc = "This is an option"
+cmd = "ls"
+
+[[item]]
+code = "b"
 desc = "This is an option"
 cmd = "ls"
