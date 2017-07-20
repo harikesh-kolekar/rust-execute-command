@@ -46,25 +46,31 @@ fn parse_config(config: String) -> Result<Config, String> {
     toml::from_str(&config).map_err(|e: toml::de::Error| e.to_string())
 }
 
-fn print_menu(config: Config) -> Result<String, String> {
+fn print_menu(config: Config) -> Result<Config, String> {
     println!("{}", "==============================================");
-    for item in config.item {
+    for item in &config.item {
         println!("{:6} {}", Bold.paint(&item.code), item.desc);
     }
     println!("{}", "==============================================");
+
+    Ok(config)
+}
+
+fn ask_for_option(config: Config) -> Result<Config, String> {
     println!("{}", Green.paint("Select an option"));
 
     io::stdout().flush();
     let mut opt = String::new();
     io::stdin().read_line(&mut opt);
 
-    Ok("".to_string())
+    Ok(config)
 }
 
 fn main() {
-    let config_result = read_config().and_then(parse_config);
-
-    let result = config_result.and_then(|config| print_menu(config));
+    let result = read_config()
+        .and_then(parse_config)
+        .and_then(print_menu)
+        .and_then(ask_for_option);
 
     match result {
         Ok(config) => println!("{}", "Bye!"),
