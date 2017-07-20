@@ -8,7 +8,7 @@ use std::fmt;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io;
-use std::process::Command;
+use std::process::{Command, Stdio};
 use term_painter::Attr::*;
 use term_painter::Color::*;
 use term_painter::ToStyle;
@@ -83,21 +83,19 @@ fn ask_for_option(config: Config) -> Result<(Config, String), String> {
 fn find_item(tuple: (Config, String)) -> Result<Item, String> {
     let (config, opt) = tuple;
 
-    config.item
+    config
+        .item
         .iter()
         .find(|&item| item.code == opt)
         .cloned()
         .ok_or("Option not found".to_string())
 }
 
-fn run_item(item: Item) -> Result<std::process::Output, String> {
-    Command::new(item.cmd)
-        .output()
-        .and_then(|output|
-            println!("{}", String::from_utf8_lossy(&output.stdout));
-            println!("{}", String::from_utf8_lossy(&output.stderr));
-            Ok(output)
-        )
+fn run_item(item: Item) -> Result<std::process::Child, String> {
+    Command::new(item.cmd).spawn().map_err(
+        |err| err.to_string(),
+    )
+
 }
 
 fn main() {
