@@ -1,9 +1,23 @@
+#[macro_use]
+extern crate serde_derive;
 extern crate toml;
 
 use std::fs::File;
 use std::io::prelude::*;
 use toml::Value;
 use std::error::Error;
+
+#[derive(Deserialize)]
+struct Config {
+    items: Vec<Item>,
+}
+
+#[derive(Deserialize)]
+struct Item {
+    cmd: String,
+    code: String,
+    description: String,
+}
 
 fn read_config() -> Result<String, String> {
     File::open("./run.toml")
@@ -17,9 +31,7 @@ fn read_config() -> Result<String, String> {
 }
 
 fn parse_config(config: String) -> Result<Value, String> {
-    config.parse::<Value>().map_err(
-        |e: toml::de::Error| e.to_string(),
-    )
+    config.parse::<Value>().map_err(|e: toml::de::Error| e.to_string())
 }
 
 fn main() {

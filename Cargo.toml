@@ -5,3 +5,5 @@ authors = ["sebastian <s@porto5.com>"]
 
 [dependencies]
 toml = "0.4.2"
+serde = "1.0.10"
+serde_derive = "1.0.10"
