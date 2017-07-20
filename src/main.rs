@@ -1,12 +1,17 @@
 #[macro_use]
 extern crate serde_derive;
 extern crate toml;
+extern crate term_painter;
 
-use std::fs::File;
-use std::io::prelude::*;
-use toml::Value;
 use std::error::Error;
 use std::fmt;
+use std::fs::File;
+use std::io::prelude::*;
+use std::io;
+use term_painter::Attr::*;
+use term_painter::Color::*;
+use term_painter::ToStyle;
+use toml::Value;
 
 #[derive(Deserialize)]
 struct Config {
@@ -42,9 +47,17 @@ fn parse_config(config: String) -> Result<Config, String> {
 }
 
 fn print_menu(config: Config) -> Result<String, String> {
+    println!("{}", "==============================================");
     for item in config.item {
-        println!("{} {}", item.code, item.desc);
+        println!("{:6} {}", Bold.paint(&item.code), item.desc);
     }
+    println!("{}", "==============================================");
+    println!("{}", Green.paint("Select an option"));
+
+    io::stdout().flush();
+    let mut opt = String::new();
+    io::stdin().read_line(&mut opt);
+
     Ok("".to_string())
 }
 
