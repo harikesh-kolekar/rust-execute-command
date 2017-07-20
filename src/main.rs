@@ -5,7 +5,7 @@ use std::io::prelude::*;
 use toml::Value;
 use std::error::Error;
 
-fn readConfig() -> Result<String, String> {
+fn read_config() -> Result<String, String> {
     File::open("./run.toml")
         .map_err(|err| err.to_string())
         .and_then(|mut file| {
@@ -16,14 +16,14 @@ fn readConfig() -> Result<String, String> {
         })
 }
 
-fn parseConfig(config: String) -> Result<Value, String> {
+fn parse_config(config: String) -> Result<Value, String> {
     config.parse::<Value>().map_err(
         |e: toml::de::Error| e.to_string(),
     )
 }
 
 fn main() {
-    let config = readConfig().and_then(parseConfig);
+    let config = read_config().and_then(parse_config);
 
     match config {
         Ok(text) => println!("{}", text),
