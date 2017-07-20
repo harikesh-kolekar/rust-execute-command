@@ -56,13 +56,19 @@ fn print_menu(config: Config) -> Result<Config, String> {
     Ok(config)
 }
 
-fn ask_for_option(config: Config) -> Result<Config, String> {
+fn ask_for_option(config: Config) -> Result<(Config, String), String> {
     println!("{}", Green.paint("Select an option"));
 
     io::stdout().flush();
     let mut opt = String::new();
     io::stdin().read_line(&mut opt);
 
+    let value = (config, opt);
+    Ok(value)
+}
+
+fn find_item(tuple: (Config, String)) -> Result<Config, String> {
+    let (config, opt) = tuple;
     Ok(config)
 }
 
@@ -70,7 +76,8 @@ fn main() {
     let result = read_config()
         .and_then(parse_config)
         .and_then(print_menu)
-        .and_then(ask_for_option);
+        .and_then(ask_for_option)
+        .and_then(find_item);
 
     match result {
         Ok(config) => println!("{}", "Bye!"),
