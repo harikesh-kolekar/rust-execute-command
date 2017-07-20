@@ -91,10 +91,30 @@ fn find_item(tuple: (Config, String)) -> Result<Item, String> {
         .ok_or("Option not found".to_string())
 }
 
-fn run_item(item: Item) -> Result<std::process::Child, String> {
-    Command::new(item.cmd).spawn().map_err(
-        |err| err.to_string(),
-    )
+fn run_item(item: Item) -> Result<std::process::Output, String> {
+    // Command::new(item.cmd).spawn().map_err(
+    //     |err| err.to_string(),
+    // )
+
+    // new should take only the program
+    // args need to be split
+
+    // Command::new("/usr/bin/ssh")
+    //     .args(&["-l", "-a"])
+    //     .spawn()
+
+    let parts: Vec<&str> = item.cmd.split(" ").collect();
+
+    parts
+        .first()
+        .ok_or("Command not found".to_string())
+        .and_then(|cmd| {
+            Command::new(cmd)
+                .stdout(Stdio::inherit())
+                .stderr(Stdio::inherit())
+                .output()
+                .map_err(|err| err.to_string())
+        })
 
 }
 
@@ -107,7 +127,7 @@ fn main() {
         .and_then(run_item);
 
     match result {
-        Ok(config) => println!("{}", "Bye!"),
+        Ok(config) => println!("{}", ""),
 
         Err(err) => println!("{}", err),
     }
