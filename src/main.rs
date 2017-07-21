@@ -106,10 +106,11 @@ fn run_item(item: Item) -> Result<std::process::Output, String> {
     let parts: Vec<&str> = item.cmd.split(" ").collect();
 
     parts
-        .first()
+        .split_first()
         .ok_or("Command not found".to_string())
-        .and_then(|cmd| {
+        .and_then(|(cmd, rest)| {
             Command::new(cmd)
+                .args(rest)
                 .stdout(Stdio::inherit())
                 .stderr(Stdio::inherit())
                 .output()
