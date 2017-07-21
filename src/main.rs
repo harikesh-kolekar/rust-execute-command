@@ -92,17 +92,6 @@ fn find_item(tuple: (Config, String)) -> Result<Item, String> {
 }
 
 fn run_item(item: Item) -> Result<std::process::Output, String> {
-    // Command::new(item.cmd).spawn().map_err(
-    //     |err| err.to_string(),
-    // )
-
-    // new should take only the program
-    // args need to be split
-
-    // Command::new("/usr/bin/ssh")
-    //     .args(&["-l", "-a"])
-    //     .spawn()
-
     let parts: Vec<&str> = item.cmd.split(" ").collect();
 
     parts
