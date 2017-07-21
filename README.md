@@ -2,7 +2,17 @@
 
 A simple terminal menu to run commands.
 
-# Create a `run.toml`:
+## Install
+
+```
+cargo install run
+```
+
+Make sure downloaded cargo binaries are in your PATH. 
+
+## Configuration
+
+Create a `run.toml` e.g.:
 
 ```
 [[item]]
