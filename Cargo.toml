@@ -1,5 +1,5 @@
 [package]
-name = "run-rust"
+name = "run"
 version = "0.1.0"
 authors = ["sebastian <s@porto5.com>"]
 
