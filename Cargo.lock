@@ -1,5 +1,5 @@
 [root]
-name = "run-rust"
+name = "run"
 version = "0.1.0"
 dependencies = [
  "serde 1.0.10 (registry+https://github.com/rust-lang/crates.io-index)",
